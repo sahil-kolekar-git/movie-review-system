@@ -1,6 +1,8 @@
 package com.ty.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,6 +11,7 @@ import com.ty.service.ReviewService;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -19,11 +22,20 @@ public class ReviewController {
 	private ReviewService reviewService;
 
 	@PostMapping("/{movieid}/")
-	public String addReview(@PathVariable Integer movieid, @RequestBody Review review) {
+	public ResponseEntity<String> addReview(@PathVariable Integer movieid, @RequestBody Review review) {
 
-		reviewService.addReview(movieid, review);
+		boolean isAdded = reviewService.addReview(movieid, review);
 
-		return "";
+		return isAdded ? new ResponseEntity<String>("Review Added", HttpStatus.OK)
+				: new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_GATEWAY);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Review> updateReview(@PathVariable Integer id, @RequestBody Review review) {
+
+		Review updatedReview = reviewService.updateReview(id, review);
+
+		return new ResponseEntity<Review>(updatedReview, HttpStatus.OK);
 	}
 
 }

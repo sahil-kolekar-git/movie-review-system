@@ -6,4 +6,6 @@ public interface ReviewService {
 
 	boolean addReview(Integer id, Review review);
 
+	Review updateReview(Integer id, Review review);
+
 }
